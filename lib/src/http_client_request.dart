@@ -32,7 +32,7 @@ class StethoHttpClientRequest implements HttpClientRequest {
   @override
   Future addStream(Stream<List<int>> stream) {
     var newStream = stream.asBroadcastStream();
-    newStream.listen((onData)=> _streamController.add(onData));
+    newStream.listen((onData) => _streamController.add(onData));
     return request.addStream(newStream);
   }
 
@@ -81,8 +81,7 @@ class StethoHttpClientRequest implements HttpClientRequest {
   bool get followRedirects => request.followRedirects;
 
   @override
-  set followRedirects(bool followRedirects) =>
-      request.followRedirects = followRedirects;
+  set followRedirects(bool followRedirects) => request.followRedirects = followRedirects;
 
   @override
   int get maxRedirects => request.maxRedirects;
@@ -94,8 +93,7 @@ class StethoHttpClientRequest implements HttpClientRequest {
   bool get persistentConnection => request.persistentConnection;
 
   @override
-  set persistentConnection(bool persistentConnection) =>
-      request.persistentConnection = persistentConnection;
+  set persistentConnection(bool persistentConnection) => request.persistentConnection = persistentConnection;
 
   @override
   HttpConnectionInfo get connectionInfo => request.connectionInfo;
@@ -139,10 +137,15 @@ class StethoHttpClientRequest implements HttpClientRequest {
   @override
   void writeln([Object obj = ""]) {
     request.writeln(obj);
-    if (obj is String){
+    if (obj is String) {
       _streamController.add(obj.codeUnits);
     } else {
       _streamController.add(obj.toString().codeUnits);
     }
+  }
+
+  @override
+  void abort([Object exception, StackTrace stackTrace]) {
+    request.addError(exception, stackTrace);
   }
 }
